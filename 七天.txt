@@ -1,0 +1,83 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<stdio.h>
+#include<stdlib.h>
+int  fibonacci(int i)
+{
+	if (i == 1 || i == 2)
+	{
+		return 1;
+	}
+	return fibonacci(i - 1) + fibonacci(i - 2);
+}
+int main()
+{
+	int i;
+	printf("输入你想知道的斐波那契数列\n");
+	scanf("%d", &i);
+	i=fibonacci(i);
+	printf("%d\n", i);
+}
+
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<stdio.h>
+#include<stdlib.h>
+int main()
+{
+	int  a = 1;
+	int s,i,o = 0;
+	printf("输入你想知道的斐波那契数\n");
+	scanf("%d", &i);
+	for (int k = 2; k < i; k++)
+	{
+		o = s + a;
+		s = o;
+		a = s;
+	}
+	printf("%d\n", o);
+}
+
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<stdio.h>
+#include<stdlib.h>
+int hanshu(int k, int l)
+{
+	if (l == 1)
+	{
+		return k;
+	}
+	return hanshu(k, l - 1)*k;
+}
+int main()
+{
+	int k, l = 0;
+	printf("输入数的阶乘\n");
+	scanf("%d %d", &k, &l);
+	k=hanshu(k, l);
+	printf("%d\n", k);
+	system("pause");
+}
+
+
+
+
+
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<stdio.h>
+#include<stdlib.h>
+digitsum(int i)
+{
+	if (i / 10 == 0)
+	{
+		return i % 10;
+	}
+	return i % 10 + digitsum(i / 10);
+}
+int main()
+{
+	int k;
+	int i;
+	scanf("%d", &i);
+	k=digitsum(i);
+	printf("%d", k);
+}
+
