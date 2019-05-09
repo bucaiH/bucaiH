@@ -1,0 +1,183 @@
+#include <iostream>
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+main.cpp
+#include "graphics.h" // 就是需要引用这个图形库 
+#include"post.h"
+#include"drawchessboard.h"
+#include"interface.h"
+
+struct POS
+{
+	int row;//表示行 
+	int col;//表示列 
+};
+
+int main()
+{
+	post a; 
+	a.initgrap(); 
+	a.draw();
+	a.chess();	
+	getch(); // 暂停一下等待用户按键  
+	closegraph(); // 关闭图形界面  
+	return 0;
+}
+
+//post.h
+#ifndef POST_H
+#define POST_H
+
+#include "drawchessboard.h"
+
+class post : public drawchessboard
+{
+	public:
+		POS getmousepos();
+		void chess();
+	protected:
+};
+
+#endif
+
+//post.cpp
+#include "post.h"
+#include<iostream>
+#include "graphics.h"
+POS post::getmousepos()//捕捉鼠标信息 
+{
+	POS pos;
+	randomize();
+	setfont(18,0,"宋体");//设置字体 
+	mouse_msg msg = {0};//保存鼠标信息 
+
+	while(1)
+	{
+		msg = getmouse();//获取鼠标信息
+		if(msg.is_left() && msg.is_down()
+			&& msg.x > xbegin && msg.x < xbegin + width
+			&& msg.y > ybegin && msg.y < ybegin + hight)
+			{
+				pos.col = (msg.x - xbegin) / gridw;
+				pos.row = (msg.y - ybegin) / gridh;
+				break;
+			}//鼠标在棋盘内按左下键则显示坐标 
+	}
+	return pos;
+}
+void post::chess()
+{
+	int color=1;
+	for(;is_run();delay_fps(60))//窗口不关闭，则程序继续运行 
+	{
+		POS pos = getmousepos();
+		if(color==1)
+			setfillcolor(BLACK);
+		else
+			setfillcolor(WHITE);
+		color=3-color;
+		xyprintf(0,0,"row = %d  col = %d",pos.row,pos.col);
+		fillellipse(xbegin + pos.col * gridw + gridw / 2,
+					ybegin + pos.row * gridh + gridh / 2,
+					gridw * 2/5,gridh * 2/5);//绘制棋子（圆心位置，半径）
+	}
+}
+//drawchessboard.h
+#include <iostream>
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+
+#include "graphics.h" // 就是需要引用这个图形库 
+#include"post.h"
+#include"drawchessboard.h"
+#include"interface.h"
+
+struct POS
+{
+	int row;//表示行 
+	int col;//表示列 
+};
+
+int main()
+{
+	post a; 
+	a.initgrap(); 
+	a.draw();
+	a.chess();	
+	getch(); // 暂停一下等待用户按键  
+	closegraph(); // 关闭图形界面  
+	return 0;
+}
+//drawchessboard.cpp
+#include "drawchessboard.h"
+#include "graphics.h"
+#include<iostream>
+drawchessboard::drawchessboard(int a,int b,int c,int d,int e)
+:interface(a,b),
+{
+	width=c;
+	hight=d;
+	gridsize=e;	
+	int gridw = width / gridsize;//棋盘格子的宽 
+    int gridh = hight / gridsize;//棋盘格子的高 
+    int xbegin = (winw - width) / 2;//棋盘左上角的横坐标 
+    int ybegin = (winh - hight) / 2;//棋盘左上角的纵坐标 
+	
+}
+void drawchessboard::draw()
+{
+    int x1,y1,x2,y2;
+	x1 = xbegin;
+	x2 = xbegin + width;
+	for(int i = 0;i <= gridsize;i++)
+	{
+		y1 = y2 = ybegin + i * gridh;
+		line(x1,y1,x2,y2);
+	}//绘制行 
+
+	y1 = ybegin;
+	y2 = ybegin + hight;
+	for(int i = 0;i <= gridsize;i++)
+	{
+		x1 = x2 = xbegin + i * gridw;
+		line(x1,y1,x2,y2);
+	}//绘制列 
+ 
+}
+drawchessboard::~drawchessboard()
+{
+}
+//interface.h
+#ifndef INTERFACE_H
+#define INTERFACE_H
+#include "graphics.h"
+class interface
+{
+	public:
+		interface(int a=640,int b=480);
+		void initgrap();
+		~interface();
+	protected:
+		int winw;
+		int winh;
+};
+
+#endif
+//interface.cpp
+#include "interface.h"
+#include "graphics.h"
+interface::interface(int a,int b)
+{
+	winw=a;
+	winh=b;
+}
+void interface::initgrap()
+{
+	initgraph(winw,winh);
+	setbkcolor(EGERGB(255,188,140));//设置背景颜色 
+	setcolor(EGERGB(164,150,243));//设置线条颜色 
+}
+interface::~interface()
+{
+}
+
