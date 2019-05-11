@@ -1,0 +1,380 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h> 
+struct sports{                                        //定义运动员结构体； 
+		char name[8];
+		char sex[4];
+		char birthday[20];
+		char zhiye[10];
+		char place[100];
+		char ach[100];
+		struct sports *next;                         //定义结构体指针； 创建链表； 
+	}sp;                                            //定义结构体变量； 
+	char record[4] ;                                //定义记录的个数； 
+
+//结构体 
+struct sports *p1,*p2,*head;                       //定义一个关于结构体的头结点和p1和p2结点的指针；  
+FILE *fp;                                          //定义一个文件指针；    
+void Menu()                                        //菜单函数； 
+{
+	printf("****************************************\n");
+	printf("           1知名运动员信息录入         	\n");
+	printf("           2知名运动员的查询            \n");
+	printf("           3知名运动员的游览            \n");
+	printf("           4知名运动员的修改            \n");
+	printf("           5知名运动员信息统计          \n");
+	printf("           6退出系统                    \n");
+	printf("****************************************\n");
+};
+void FileLoading()                                //加载函数 
+{
+		if((fp=fopen("txl.dat","rb"))==NULL)     //看看文件是否能正常打开； 
+	{
+		printf("文件操作错误，请重试。");
+		Sleep(1000);
+		exit(1);
+	}
+	p1=(struct sports*)malloc(sizeof(struct sports)); //为p1结点分配空间 
+	p1->next=NULL;                                     //初始化指针； 
+	head=p1;
+	while(!feof(fp))                                //检测流上的文件是否结束； 
+	{
+		if(fread(p1,sizeof(struct sports),1,fp)!=1)   //文件流中读数据； 
+		{ 
+			break;
+			} 
+		p2=(struct sports*)malloc(sizeof(struct sports));
+		p2->next=NULL;
+		p1->next=p2;
+		p1=p2;
+	}
+	fclose(fp);                             //关闭文件； 
+}
+void add()                                     //输入函数； 
+{	
+	char ch; 
+	if((fp==fopen("txl.dat","ab+"))!=1)          //只写形式打开文件； 
+	{
+		printf("文件打开失败\n");
+		exit(1);
+	}
+	while(1)
+	{	system("cls");
+		printf("请输入\n");
+		p2=(struct sports*)malloc(sizeof(struct sports));   //为p2申请空间； 
+		p2->next=NULL; 
+		printf("姓名：");                                    //输入结构体的变量； 
+		scanf("%s",sp.name);
+		printf("性别：");
+		scanf("%s",sp.sex);
+		printf("生日：");
+		scanf("%s",sp.birthday);
+		printf("职业：");
+		scanf("%s",sp.zhiye);
+		printf("出生地：");
+		scanf("%s",sp.place);
+		printf("成就：");
+		scanf("%s",sp.ach);
+		strcpy(p1->name,sp.name);                            //把结构体变量挨个输入到链表里； 
+		strcpy(p1->sex,sp.sex);
+		strcpy(p1->birthday,sp.birthday);
+		strcpy(p1->zhiye,sp.zhiye);
+		strcpy(p1->place,sp.place);
+		strcpy(p1->ach,sp.ach);
+		p1->next=p2;                                       
+		p1=p2;         
+		if(fwrite(&sp,sizeof(struct sports),1,fp)!=1)               //fwite函数；按照指定文件进写入若干数据块； 
+		{ 
+			printf("写入错误");
+			} 
+		printf("输入y来结束输入？");
+		getchar();
+		ch=getchar();
+		if(ch=='y')
+			break;
+
+	}
+	fclose(fp);
+}
+void SaveChange()                                               //保存函数； 
+{	
+	if((fp==fopen("txl.dat","w"))!=1)                           //以只写的形式创建一个文件； 
+	{
+		printf("文件打开失败");
+		exit(1);                                                 //非正常运行退出程序； 
+	}
+	p1=head;
+	while(p1->next!=NULL)
+	{
+		if(fwrite(p1,sizeof(struct sports),1,fp)!=1)             //fiwit函数，把数据模块写入文件； 
+			printf("写入错误");
+		p1=p1->next;                                             
+		
+	} 
+	fclose(fp);
+}
+void chaxun()                                              //查询函数； 
+{
+	printf("%s             %s          %s             %s           %s           %s\n","姓名","性别","生日","职业","出生地","成就");	
+	p1=head;                                                               //p1指针变为头指针； 
+	while(p1->next!=NULL)
+	{
+		printf("%s             %s          %s             %s           %s           %s\n",p1->name,p1->sex,p1->birthday,p1->zhiye,p1->place,p1->ach);
+		p1=p1->next;                                  //p1下一节点保存的p1； 
+		
+	} 
+	
+}
+
+void All()                                 //统计函数 
+{	
+	int i=0; 
+	printf("          共有记录条数为：    \n");	
+	printf("---------------------------------------------------------------------\n");
+	p1=head;                              //p1指针变为头指针； 
+		while(p1->next!=NULL)
+	{
+		i++;
+		p1=p1->next;
+		
+	} 
+	printf("          %d                  \n",i);
+}
+void CheckMenu()                         //检索函数； 
+{	
+	int Check_key; 
+	printf("--------1.按姓名查询--------\n");
+	printf("--------2.按成就查询--------\n");
+	printf("--------3.综合查询-----------\n");
+	printf("--------4.返回主菜单--------\n");
+}
+void name()                               //按照名字查询函数； 
+{	
+	system("cls"); 
+	printf("%s             %s          %s             %s           %s           %s\n","姓名","性别","生日","职业","出生地","成就");	
+	p1=head;                                   //p1指针变为头指针； 
+	char FindName[8];
+	int i=0; 
+	printf("请输入要查询的姓名：");
+	scanf("%s",&FindName);
+	while(p1->next!=NULL)
+	{
+		if(strcmp(p1->name,FindName)==0)                //ctrcmp函数； 
+		    {
+			printf("%s             %s          %s             %s           %s           %s\n",p1->name,p1->sex,p1->birthday,p1->zhiye,p1->place,p1->ach);
+		    i++;
+			}
+		p1=p1->next;                                   //p1的下一节点保存在p1； 
+		
+	} 
+	printf("共  %d  条\n",i);
+	system("pause");                                       //暂停函数； 
+} 
+
+void ach()													//成就函数； 
+{	
+	system("cls"); 
+	printf("%s             %s          %s             %s           %s           %s\n","姓名","性别","生日","年龄","出生地","成就");	
+	p1=head;                                            //p1指针变为头指针；
+	char find[50];
+	int i=0; 
+	printf("请输入要查询的成就：");
+	scanf("%s",&find);
+	while(p1->next!=NULL)
+	{
+		if(strcmp(p1->ach,find)==0) 
+		    {
+			printf("%s             %s          %s             %s           %s           %s\n",p1->name,p1->sex,p1->birthday,p1->zhiye,p1->place,p1->ach);
+		    i++;
+			}
+		p1=p1->next;                                      //p1的下一节点保存在p1；
+		
+	} 
+	printf("共  %d  条\n",i);
+	system("pause"); 
+} 
+void zonghe()                                              //综合查询函数； 
+{	system("cls"); 
+	printf("%s             %s          %s             %s           %s           %s\n","姓名","性别","生日","职业","出生地","成就");	
+	printf("---------------------------------------------------------------------\n");
+	p1=head;
+	char all[30];
+	int i=0; 
+	printf("请输入任意一项要查询的内容：");
+	scanf("%s",&all);
+	while(p1->next!=NULL)
+	{
+		if(strcmp(p1->name,all)==0||strcmp(p1->sex,all)==0||strcmp(p1->birthday,all)==0||strcmp(p1->zhiye,all)==0||strcmp(p1->place,all)==0||strcmp(p1->ach,all)==0) 
+		    {printf("%s             %s          %s             %s           %s           %s\n",p1->name,p1->sex,p1->birthday,p1->zhiye,p1->place,p1->ach);
+		    i++;
+			}
+		p1=p1->next;
+		
+	} 
+	printf("共  %d  条\n",i);
+	system("pause");                             //暂停函数； 
+} 
+void Change()                       //改变函数； 
+{	char ChangeName[8]; 
+	int changekey;
+	system("cls");
+	int i,y=0;				
+    p1=p2=head;		
+	printf("请输入你要修改的条目的姓名：");
+	scanf("%s",&ChangeName);
+		getchar();	                     //getchar函数，取输入字符串的第一个字符。 
+	while(p1!=NULL)
+	{	
+	if(strcmp(p1->name,ChangeName)==0)	
+	   {	
+	   		printf("%s             %s          %s             %s           %s           %s\n",p1->name,p1->sex,p1->birthday,p1->zhiye,p1->place,p1->ach);
+			printf("您要修改的是这条记录吗？\n");
+			printf("1.同意    2.不同意\n");
+			scanf("%d",&i);
+			if(i==1)
+			{ 
+			y=1;
+			printf("修改后的信息为:\n");
+	   		printf("%%s             %s          %s             %s           %s           %s\n",p1->name,p1->sex,p1->birthday,p1->zhiye,p1->place,p1->ach);
+        	printf("请选择您的操作\n     1.删除   2.修改\n");
+        	scanf("%d",&changekey);	
+        	if(changekey==1) 
+       		 {
+          		if(p1==head)		 
+             	 {
+				  head=p1->next;	 
+          		  free(p1);
+			 	 }
+				  else
+            	 {
+             		p2->next=p1->next;
+                	free(p1);	                               //释放空间； 
+		  			SaveChange();	                         //保存改变的数据； 
+             	
+             }
+				
+		} 
+		else if(changekey==2)
+		{
+			printf("姓名:");
+			scanf("%s",p1->name);
+			printf("性别:");
+			scanf("%s",p1->sex);
+			printf("生日:");
+			scanf("%s",p1->birthday);
+			printf("职业:");
+			scanf("%s",p1->zhiye);
+			printf("出生地:");
+			scanf("%s",p1->place);
+			printf("成就:");
+			scanf("%s",p1->ach);	
+			SaveChange();
+			printf("\n  OK!    \n");
+		} 	
+			}			
+		
+	   }
+	else if(strcmp(p1->name,ChangeName)&&(p1->next)==NULL)                  //strcmp函数； 
+	   {
+			i=0;			 
+		
+	   }
+   		p2=p1;		
+	    p1=p1->next;  
+	}
+
+     if(y==0)	
+	{
+        printf("对不起，没有找到要修改的通讯名单，请检查你要修改的姓名是否正确\n");
+    }
+    
+	
+	system("pause");                                       //暂停函数； 
+}
+void jieshu()                              //结束函数； 
+{
+	printf("------------------------------------------------------------\n");
+	printf("                     谢谢使用！                             \n");
+	printf("------------------------------------------------------------\n");
+}
+int main()
+{	int key;
+	int Ex_key; 
+	int Check_key;
+	char a[10];
+	if((fp=fopen("txl.dat","ab"))==NULL)            //只写模式打开文件。 
+	{
+		printf("文件操作错误，请检查是否有误");
+		Sleep(3000);                              //休眠函数； 
+		exit(1);                                  //非正常输出结束程序； 
+	}
+	fclose(fp);                                   //关闭文件；	
+	FileLoading();                                //加载函数； 
+	while(1)
+	{
+	Menu();                                         //菜单函数； 
+	gets(a);
+	key=atoi(a);                                //atoi函数，一个字符转变为整数型； 
+	if(key==1)
+	   {
+	   	system("cls");                          //窗口清空； 
+		add();                                   //输入函数； 
+		}
+	else if(key==2)
+		{	
+		system("cls");
+		while(1)
+     		 {
+			CheckMenu();                         //检索菜单； 
+     		printf("请输入你的选择:\n");
+	  		gets(a);
+	  		Check_key=atoi(a);                     //字符型转化为整数型； 
+    		if(Check_key==1)
+    		{ 
+    		system("cls");
+    			name();                           //依照名字搜索的函数； 
+    			} 
+    		else if(Check_key==2)
+    		{ 
+    			ach();                              //依照成就搜索的函数； 
+			}
+    		else if(Check_key==3)
+    			{
+				zonghe();                         //综合查询函数； 
+			}
+			else if(Check_key==4)
+    	{ 
+    		break;
+		} 
+			system("cls");	               //清空窗口； 
+			getchar();	                           //转变函数； 
+    	} 	
+		}
+ 	
+ 	else if(key==3)      
+ 	{	
+	 	system("cls");                           //清空窗口； 
+	 	chaxun();                               //查询函数； 
+ 		system("pause");                        //暂停函数； 
+ 	}
+	else if(key==4)
+		{
+		Change();                                  //修改函数； 
+		} 
+ 	else if(key==5)
+	 	{ 
+	 	system("cls");                            //清空窗口； 
+ 		All();                                    //统计窗口； 
+ 		system("pause");                          //暂停函数； 
+		 }
+ 	else if(key==6) 
+	 	{
+ 		system("cls");                           // 窗口清空； 
+	 	jieshu();	                              //结束函数； 
+	 	Sleep(1000);                               //休眠函数； 
+		exit(0);                                    //正常退出程序； 
+		}
+		system("cls");
+ 		getchar();
+	}
+}
