@@ -1,0 +1,138 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+typedef struct node
+{
+	int data;
+	struct node *next;
+}LinkList;
+LinkList *Init(LinkList *head)
+{
+	head=(LinkList*)malloc(sizeof(LinkList));
+	if(head==NULL)
+	{
+		printf("此空间申请失败\n"); 
+	}
+	head->next=NULL;
+	return head;
+}
+int changdu(LinkList *head)
+{
+	LinkList *p=head;
+	int i=0;
+	while(p->next!=NULL)
+	{
+		p=p->next;
+		i++;
+	}
+	return i;
+}
+int chazhao1(int s,LinkList *head)
+{
+	LinkList *p=head;
+	int i=0;
+	while(i<s)
+	{
+		p=p->next;
+		i++;
+	}
+	return s=p->data;
+}
+int chazhao2(int ix,LinkList *head)
+{
+	LinkList *p=head;
+	int i=0;
+	while(p->data!=ix)
+	{
+		p=p->next;
+		i++;
+	}
+	if(p->next==NULL)
+	{
+		return 0;
+	}
+	else
+	{
+	return i;
+	}
+}
+LinkList *charu(int ix, LinkList *head)
+{
+	LinkList *L, *q;
+	L=(LinkList*)malloc(sizeof(LinkList));
+	L->data=ix;
+	q=head;
+	for(int i=0;i<=2;i++)
+	{
+		q=q->next; 
+	 } 
+	 L->next=q->next;
+	 q->next=L;
+	 return head; 
+}
+LinkList *shanchu(LinkList *head,int s)
+{
+	LinkList *q=head;
+	for(int i=0;i<=s-2;i++)
+	{
+		q=q->next; 
+	 } 
+	 q->next=q->next->next;
+	 return head;
+}
+int main()
+{
+	int i=0;
+	int s;
+	int length=0;
+	LinkList *p, *head, *tail;
+	int ix=0;
+	printf("请建立头结点\n"); 
+	head=Init(head);
+	tail=head;
+	printf("输入其他头结点\n"); 
+	for(int i=0; i<10;i++)
+	{
+		scanf("%d",&ix);
+		p=(LinkList*)malloc(sizeof(LinkList));
+		p->data=ix; 
+		tail->next=p; 
+		tail=p;
+		tail->next =NULL;
+	}
+	length=changdu(head);
+	printf("此链表长度为:%d",length);
+	printf("\n");
+	printf("请输入想要知道的位置:");
+	scanf("%d",&s);
+	ix=chazhao1(s,head);
+	printf("\n");
+	printf("第%d的元素为%d\n",s,ix);
+	printf("请输入想要知道的元素:");
+	scanf("%d",&ix);
+	s=chazhao2(ix,head);
+	printf("\n");
+	printf("此元素位置为%d\n",s);
+	printf("在第4个元素前插入一个元素\n");
+	printf("输入的元素为:");
+	scanf("%d",&ix);
+	head=charu(ix,head); 
+	p=head->next;
+	while(p->next!=NULL)
+	{
+		printf("%d ",p->data);
+		p=p->next;
+		i++;
+	}
+	printf("\n");
+	printf("请输入你所要删除的第几个元素\n");
+	scanf("%d",&s);
+	head=shanchu(head,s); 
+	p=head->next;
+	while(p->next!=NULL)
+	{
+		printf("%d ",p->data);
+		p=p->next;
+		i++;
+	}
+ } 
