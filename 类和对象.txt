@@ -1,0 +1,64 @@
+#ifndef BOOK_H
+#define BOOK_H
+#include<iostream>
+#include<string>
+class Book
+{
+	public:
+		explicit Book(std::string name, int price, int number, std::string publishing);
+		void setBook(std::string name, int price);
+		int getBook();
+		void ShowBook();
+	private:
+		std::string BookName;
+		double BookPrice;
+		int BookNumber;
+		std::string PubliShing;
+};
+
+#endif
+Book.cpp代码：
+#include "Book.h"
+#include<iostream>
+#include<string>
+using namespace std;
+Book::Book(string name, int price, int number, string publishing)
+	:BookName(name), BookPrice(price), BookNumber(number), PubliShing(publishing)
+	{
+		//BookName=name;
+	}
+	void Book::setBook(string name, int price)
+	{
+		BookName=name;
+		BookPrice=price;
+	}
+	int Book::getBook()
+	{
+		return BookNumber;
+	}
+	void Book::ShowBook()
+	{
+		cout << "hello,welcome to Book!\n" << BookName <<"   " << BookPrice << "   " << BookNumber << "   "<< PubliShing << endl;
+	}
+
+testBook.cpp代码：
+#include <iostream>
+#include"Book.h"
+#include<string>
+using namespace std;
+int main()
+{
+	string name;
+	int price;
+	Book Book1("三国演义",25.2,0001,"中华出版社");
+	Book Book2("红楼梦",30.4,0002,"中华出版社");
+	Book1.ShowBook();
+	cout << "请输入你所要修改的书的名字以及价格\n"; 
+	getline(cin,name);
+	cin >> price;
+	Book1.setBook(name, price);
+	cout << "get the name and price of the book" << Book1.getBook() << Book2.getBook() << endl;
+	cout << "intformation about the book\n";
+	Book1.ShowBook();
+	Book2.ShowBook(); 
+}
